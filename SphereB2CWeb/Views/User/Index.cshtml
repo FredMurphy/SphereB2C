@@ -1,0 +1,13 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>User information</h1>
+
+<h2>Claims for @User.Identity.Name</h2>
+
+@foreach (System.Security.Claims.Claim c in User.Claims)
+{
+    <div>@c.Type</div><div>= @c.Value</div><br/>
+}
