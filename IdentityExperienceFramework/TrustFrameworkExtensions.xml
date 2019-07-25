@@ -16,12 +16,15 @@
 
     <!-- 0xFRED - Added -->
     <ClaimsSchema>
+
       <ClaimType Id="confirmed">
         <DisplayName>Confirmed</DisplayName>
         <DataType>boolean</DataType>
         <UserHelpText>Confirmed via Azure Sphere</UserHelpText>
       </ClaimType>
+
     </ClaimsSchema>
+    <!-- end -->
 
   </BuildingBlocks>
 

@@ -288,6 +288,34 @@
         <UserInputType>TextBox</UserInputType>
       </ClaimType>
 
+      <!-- 0xFRED - added -->
+      <ClaimType Id="extension_secondaryMethod">
+        <DisplayName>Secondary authentication method</DisplayName>
+        <DataType>string</DataType>
+        <UserHelpText>This is how we'll do secondary authentication on your Azure Sphere device.</UserHelpText>
+        <UserInputType>DropdownSingleSelect</UserInputType>
+        <Restriction>
+          <Enumeration Text="(none)" Value="none" SelectByDefault="true" />
+          <Enumeration Text="Button press" Value="button" SelectByDefault="false" />
+          <Enumeration Text="NFC tag" Value="nfc" SelectByDefault="false" />
+        </Restriction>
+      </ClaimType>
+
+      <ClaimType Id="extension_expectedValue">
+        <DisplayName>Expected value</DisplayName>
+        <DataType>string</DataType>
+        <UserHelpText>e.g. NFC tag ID, button</UserHelpText>
+        <UserInputType>TextBox</UserInputType>
+      </ClaimType>
+
+      <ClaimType Id="extension_deviceName">
+        <DisplayName>Device name</DisplayName>
+        <DataType>string</DataType>
+        <UserHelpText>This is your Azure Sphere device name.</UserHelpText>
+        <UserInputType>TextBox</UserInputType>
+      </ClaimType>
+      <!-- end -->
+
     </ClaimsSchema>
 
     <ClaimsTransformations>
@@ -453,6 +481,13 @@
           <DisplayName>Azure Active Directory</DisplayName>
           <Protocol Name="Proprietary" Handler="Web.TPEngine.Providers.AzureActiveDirectoryProvider, Web.TPEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
 
+          <!-- 0xFRED - Added -->
+          <Metadata>
+            <Item Key="ApplicationObjectId">f5c5e582-afe1-4ea5-8feb-411112f19c25</Item>
+            <Item Key="ClientId">c773dcde-997d-430e-8f69-44e224810797</Item>
+          </Metadata>
+          <!-- end -->
+
           <CryptographicKeys>
             <Key Id="issuer_secret" StorageReferenceId="B2C_1A_TokenSigningKeyContainer" />
           </CryptographicKeys>
@@ -483,6 +518,12 @@
             <!-- Optional claims. -->
             <PersistedClaim ClaimTypeReferenceId="givenName" />
             <PersistedClaim ClaimTypeReferenceId="surname" />
+
+            <!-- 0xFRED - Added -->
+            <PersistedClaim ClaimTypeReferenceId="extension_secondaryMethod" />
+            <PersistedClaim ClaimTypeReferenceId="extension_expectedValue" />
+            <PersistedClaim ClaimTypeReferenceId="extension_deviceName" />
+
           </PersistedClaims>
           <OutputClaims>
             <OutputClaim ClaimTypeReferenceId="objectId" />
@@ -516,6 +557,12 @@
             <OutputClaim ClaimTypeReferenceId="accountEnabled" />
             <OutputClaim ClaimTypeReferenceId="otherMails" />
             <OutputClaim ClaimTypeReferenceId="signInNames.emailAddress" />
+
+            <!-- 0xFRED - Added -->
+            <OutputClaim ClaimTypeReferenceId="extension_secondaryMethod" />
+            <OutputClaim ClaimTypeReferenceId="extension_expectedValue" />
+            <OutputClaim ClaimTypeReferenceId="extension_deviceName" />
+
           </OutputClaims>
           <OutputClaimsTransformations>
             <OutputClaimsTransformation ReferenceId="AssertAccountEnabledIsTrue" />
@@ -559,6 +606,12 @@
             <!-- Optional claims -->
             <PersistedClaim ClaimTypeReferenceId="givenName" />
             <PersistedClaim ClaimTypeReferenceId="surname" />
+
+            <!-- 0xFRED - Added to try to fix it -->
+            <PersistedClaim ClaimTypeReferenceId="extension_secondaryMethod" />
+            <PersistedClaim ClaimTypeReferenceId="extension_expectedValue" />
+            <PersistedClaim ClaimTypeReferenceId="extension_deviceName" />
+
           </PersistedClaims>
           <IncludeTechnicalProfile ReferenceId="AAD-Common" />
         </TechnicalProfile>
@@ -581,6 +634,12 @@
             <OutputClaim ClaimTypeReferenceId="otherMails" />
             <OutputClaim ClaimTypeReferenceId="givenName" />
             <OutputClaim ClaimTypeReferenceId="surname" />
+
+            <!-- 0xFRED - Added -->
+            <OutputClaim ClaimTypeReferenceId="extension_secondaryMethod" />
+            <OutputClaim ClaimTypeReferenceId="extension_expectedValue" />
+            <OutputClaim ClaimTypeReferenceId="extension_deviceName" />
+
           </OutputClaims>
           <IncludeTechnicalProfile ReferenceId="AAD-Common" />
         </TechnicalProfile>
@@ -616,6 +675,12 @@
                  ValidationTechnicalProfile referenced below so it can be written to directory after being updateed by the user, i.e. AAD-UserWriteProfileUsingObjectId. -->
             <OutputClaim ClaimTypeReferenceId="givenName" />
             <OutputClaim ClaimTypeReferenceId="surname" />
+
+                        <!-- 0xFRED - Added -->
+            <OutputClaim ClaimTypeReferenceId="extension_secondaryMethod" />
+            <OutputClaim ClaimTypeReferenceId="extension_expectedValue" />
+            <OutputClaim ClaimTypeReferenceId="extension_deviceName" />
+
           </OutputClaims>
           <ValidationTechnicalProfiles>
             <ValidationTechnicalProfile ReferenceId="AAD-UserWriteProfileUsingObjectId" />
@@ -655,6 +720,12 @@
             <OutputClaim ClaimTypeReferenceId="displayName" />
             <OutputClaim ClaimTypeReferenceId="givenName" />
             <OutputClaim ClaimTypeReferenceId="surName" />
+
+            <!-- 0xFRED - Added -->
+            <OutputClaim ClaimTypeReferenceId="extension_secondaryMethod" />
+            <OutputClaim ClaimTypeReferenceId="extension_expectedValue" />
+            <OutputClaim ClaimTypeReferenceId="extension_deviceName" />
+
           </OutputClaims>
           <ValidationTechnicalProfiles>
             <ValidationTechnicalProfile ReferenceId="AAD-UserWriteUsingLogonEmail" />
