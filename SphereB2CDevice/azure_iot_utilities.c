@@ -149,7 +149,7 @@ static const char azureIoTCertificatesX[] =
 
 // Forward declarations.
 static void sendMessageCallback(IOTHUB_CLIENT_CONFIRMATION_RESULT result, void* context);
-static IOTHUBMESSAGE_DISPOSITION_RESULT receiveMessageCallback(IOTHUB_MESSAGE_HANDLE message, void* context);
+//static IOTHUBMESSAGE_DISPOSITION_RESULT receiveMessageCallback(IOTHUB_MESSAGE_HANDLE message, void* context);
 //static void twinCallback(DEVICE_TWIN_UPDATE_STATE updateState, const unsigned char *payLoad, size_t size, void *userContextCallback);
 static int directMethodCallback(const char* methodName, const unsigned char* payload, size_t size, unsigned char** response, size_t* response_size, void* userContextCallback);
 static void hubConnectionStatusCallback(IOTHUB_CLIENT_CONNECTION_STATUS result, IOTHUB_CLIENT_CONNECTION_STATUS_REASON reason, void* userContextCallback);
@@ -532,6 +532,16 @@ static int directMethodCallback(const char* methodName, const unsigned char* pay
 		result = directMethodCallCb(methodName, payload, size, &responseFromCallback, &responseFromCallbackSize);
 		*responseSize = responseFromCallbackSize;
 		*response = responseFromCallback;
+
+		/*
+		static const char methodNotFound[] = "\"OK\"";
+		*responseSize = strlen(methodNotFound);
+		*response = (unsigned char*)malloc(*responseSize);
+		if (*response != NULL) {
+			strncpy((char*)(*response), methodNotFound, *responseSize);
+		}
+		*/
+
 	}
 	else {
 		LogMessage("INFO: No method '%s' found, HttpStatus=%d\n", methodName, result);

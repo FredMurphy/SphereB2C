@@ -21,6 +21,14 @@ static GPIO_Value_Type buttonAState;
 
 int configureGpio(void);
 
+int directMethodCall(const char* directMethodName, const char* payload, size_t payloadSize, char** responsePayload, size_t* responsePayloadSize) {
+	static const char message[] = "\"Hello\"";
+	*responsePayload = message;
+	*responsePayloadSize = strlen(message);
+	
+	return 200;
+}
+
 int main(void)
 {
 	if (configureGpio() < 0)
@@ -30,6 +38,8 @@ int main(void)
 		Log_Debug("ERROR: Failed to set up IoT Hub client\n");
 		return -1;
 	}
+	AzureIoT_SetDirectMethodCallback(&directMethodCall);
+
     const struct timespec sleepTime = {1, 0};
 
     while (!terminationRequired) {
@@ -57,6 +67,7 @@ int main(void)
 	Log_Debug("Exiting");
 
 }
+
 
 int configureGpio() {
 
