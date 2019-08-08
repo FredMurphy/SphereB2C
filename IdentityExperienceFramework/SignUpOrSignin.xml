@@ -27,9 +27,12 @@
         <OutputClaim ClaimTypeReferenceId="tenantId" AlwaysUseDefaultValue="true" DefaultValue="{Policy:TenantObjectId}" />
         <!-- 0xFRED - Added -->
         <OutputClaim ClaimTypeReferenceId="extension_secondaryMethod"/>
+        <!--
         <OutputClaim ClaimTypeReferenceId="extension_expectedValue"/>
         <OutputClaim ClaimTypeReferenceId="extension_deviceName"/>
-        <OutputClaim ClaimTypeReferenceId="confirmed" />
+        <OutputClaim ClaimTypeReferenceId="extension_functionUrl"/>
+        -->
+        <OutputClaim ClaimTypeReferenceId="azsphereConfirmed" />
 
       </OutputClaims>
       <SubjectNamingInfo ClaimType="sub" />

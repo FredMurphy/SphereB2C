@@ -1,0 +1,14 @@
+{
+  "SchemaVersion": 1,
+  "Name": "SphereB2CDevice",
+  "ComponentId": "fe933b8a-8a51-4b43-97aa-a47990bbfbec",
+  "EntryPoint": "/bin/app",
+  "CmdArgs": [],
+  "Capabilities": {
+    "AllowedConnections": [ "0xfred-hub.azure-devices.net" ],
+    "Gpio": [ 8, 9, 10, 12, 13 ],
+    "Uart": [],
+    "WifiConfig": false
+  },
+  "ApplicationType": "Default"
+}

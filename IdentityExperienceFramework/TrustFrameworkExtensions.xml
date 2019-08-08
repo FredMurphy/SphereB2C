@@ -17,10 +17,10 @@
     <!-- 0xFRED - Added -->
     <ClaimsSchema>
 
-      <ClaimType Id="confirmed">
-        <DisplayName>Confirmed</DisplayName>
+      <ClaimType Id="azsphereConfirmed">
+        <DisplayName>Confirmed via Azure Sphere</DisplayName>
         <DataType>boolean</DataType>
-        <UserHelpText>Confirmed via Azure Sphere</UserHelpText>
+        <UserHelpText>User identity confirmed via Azure Sphere secondary authentication</UserHelpText>
       </ClaimType>
 
     </ClaimsSchema>
@@ -109,6 +109,18 @@
  
         <!-- 0xFRED - Added -->
         <OrchestrationStep Order="4" Type="ClaimsExchange">
+          <Preconditions>
+            <Precondition Type="ClaimsExist" ExecuteActionsIf="false">
+              <Value>extension_secondaryMethod</Value>
+              <Action>SkipThisOrchestrationStep</Action>
+            </Precondition>
+            <Precondition Type="ClaimEquals" ExecuteActionsIf="true">
+              <Value>extension_secondaryMethod</Value>
+              <Value>none</Value>
+              <Action>SkipThisOrchestrationStep</Action>
+            </Precondition>
+          </Preconditions>
+
           <ClaimsExchanges>
             <ClaimsExchange Id="GetConfirmation" TechnicalProfileReferenceId="AzureSphereConfirmationFunction-WebHook" />
           </ClaimsExchanges>

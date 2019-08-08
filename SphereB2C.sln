@@ -3,24 +3,34 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29102.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SphereB2CWeb", "SphereB2CWeb\SphereB2CWeb.csproj", "{F4D7AB89-4B73-469E-854C-FAEF30242A18}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SphereB2CWeb", "SphereB2CWeb\SphereB2CWeb.csproj", "{F4D7AB89-4B73-469E-854C-FAEF30242A18}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SphereB2CFunction", "SphereB2CFunction\SphereB2CFunction.csproj", "{5CFA68FE-199F-4EB2-931F-F9F8C06B550E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SphereB2CFunction", "SphereB2CFunction\SphereB2CFunction.csproj", "{5CFA68FE-199F-4EB2-931F-F9F8C06B550E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|ARM = Debug|ARM
 		Release|Any CPU = Release|Any CPU
+		Release|ARM = Release|ARM
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{F4D7AB89-4B73-469E-854C-FAEF30242A18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F4D7AB89-4B73-469E-854C-FAEF30242A18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4D7AB89-4B73-469E-854C-FAEF30242A18}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{F4D7AB89-4B73-469E-854C-FAEF30242A18}.Debug|ARM.Build.0 = Debug|Any CPU
 		{F4D7AB89-4B73-469E-854C-FAEF30242A18}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F4D7AB89-4B73-469E-854C-FAEF30242A18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4D7AB89-4B73-469E-854C-FAEF30242A18}.Release|ARM.ActiveCfg = Release|Any CPU
+		{F4D7AB89-4B73-469E-854C-FAEF30242A18}.Release|ARM.Build.0 = Release|Any CPU
 		{5CFA68FE-199F-4EB2-931F-F9F8C06B550E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5CFA68FE-199F-4EB2-931F-F9F8C06B550E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CFA68FE-199F-4EB2-931F-F9F8C06B550E}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{5CFA68FE-199F-4EB2-931F-F9F8C06B550E}.Debug|ARM.Build.0 = Debug|Any CPU
 		{5CFA68FE-199F-4EB2-931F-F9F8C06B550E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5CFA68FE-199F-4EB2-931F-F9F8C06B550E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CFA68FE-199F-4EB2-931F-F9F8C06B550E}.Release|ARM.ActiveCfg = Release|Any CPU
+		{5CFA68FE-199F-4EB2-931F-F9F8C06B550E}.Release|ARM.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -5,8 +5,8 @@
   xmlns="http://schemas.microsoft.com/online/cpim/schemas/2013/06"
   PolicySchemaVersion="0.3.0.0"
   TenantId="0xfredb2c.onmicrosoft.com"
-  PolicyId="B2C_1A_profile_edit"
-  PublicPolicyUri="http://0xfredb2c.onmicrosoft.com/B2C_1A_profile_edit">
+  PolicyId="B2C_1A_edit_profile"
+  PublicPolicyUri="http://0xfredb2c.onmicrosoft.com/B2C_1A_edit_profile">
 
   <BasePolicy>
     <TenantId>0xfredb2c.onmicrosoft.com</TenantId>
