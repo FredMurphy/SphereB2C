@@ -33,6 +33,7 @@
         <OutputClaim ClaimTypeReferenceId="extension_functionUrl"/>
         -->
         <OutputClaim ClaimTypeReferenceId="azsphereConfirmed" />
+        <OutputClaim ClaimTypeReferenceId="azsphereDebug" />
 
       </OutputClaims>
       <SubjectNamingInfo ClaimType="sub" />

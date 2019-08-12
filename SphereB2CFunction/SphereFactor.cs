@@ -4,36 +4,64 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using SphereB2CFunction.IotHub;
+using SphereB2CFunction.Model;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 
 namespace SphereB2CFunction
 {
-    public static class SphereFactor
+    public class SphereFactor
     {
+        private IHubService HubService { get; }
+
+        public SphereFactor(IHubService hubService)
+        {
+            HubService = hubService;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="log"></param>
+        /// {
+        ///     "name": "Fred",
+        ///     "deviceName": "AvnetDevice",
+        ///     "secondaryMethod": "nfc",
+        ///     "expectedValue": "1234"
+        /// }
+        /// <returns></returns>
         [FunctionName("Confirm")]
-        public static async Task<IActionResult> Run(
+        public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
+            log.LogInformation("SphereFactor.Confirm called");
 
-            string name = req.Query["name"];
-
+           
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            name = name ?? data?.name;
+            PostData data = JsonConvert.DeserializeObject<PostData>(requestBody);
 
-            if (name == null)
-                return new BadRequestObjectResult("Please pass a name on the query string or in the request body");
+            if (data == null)
+                return new BadRequestObjectResult("Please pass the required data in the request body");
+
+            var response = await HubService.GetSphereAuthentication(data.deviceName, data.secondaryMethod, "helloOOOoooOOOoo");
+
+            var deviceResponse = JsonConvert.DeserializeObject<DeviceResponse>(response);
+
+            var confirmed = !deviceResponse.error
+                && data.secondaryMethod.Equals(deviceResponse.method)
+                && data.expectedValue.Equals(deviceResponse.value);
 
             return (ActionResult)new OkObjectResult(
                   new ResponseContent
                   {
                       version = "1.0.0",
                       status = (int)HttpStatusCode.OK,
-                      confirmed = true
+                      confirmed = confirmed,
+                      debug = response
                   }) ;
         }
     }

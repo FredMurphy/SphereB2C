@@ -18,11 +18,43 @@ static int blueLedFd;
 static int buttonAFd;
 static int buttonBFd;
 static GPIO_Value_Type buttonAState;
+static GPIO_Value_Type buttonBState;
 
 int configureGpio(void);
+const struct timespec pollTimespec = { 1, 0 };
+
+char message[50] = "X";
 
 int directMethodCall(const char* directMethodName, const char* payload, size_t payloadSize, char** responsePayload, size_t* responsePayloadSize) {
-	static const char message[] = "\"Hello\"";
+
+	strcpy(message, "{\"error\":true,\"method\":\"none\", \"value\":\"timeout\"}");
+
+	if (strcmp(directMethodName, "Authenticate")) {
+		return 404;
+	}
+
+	GPIO_SetValue(blueLedFd, GPIO_Value_Low);
+
+	for (int i = 5; i > 0; i--) {
+		GPIO_GetValue(buttonAFd, &buttonAState);
+		if (buttonAState == GPIO_Value_Low) {
+			strcpy(message, "{\"method\":\"button\", \"value\":\"button_a\"}");
+			break;
+		}
+		GPIO_GetValue(buttonBFd, &buttonBState);
+		if (buttonBState == GPIO_Value_Low) {
+			//strcpy(message, "{\"method\":\"button\", \"value\":\"button_b\"}");
+			strcpy(message, "{\"method\":\"nfc\", \"value\":\"1234\"}");
+			break;
+		}
+
+		AzureIoT_DoPeriodicTasks();
+		nanosleep(&pollTimespec, NULL);
+	}
+	Log_Debug(message);
+	
+	GPIO_SetValue(blueLedFd, GPIO_Value_High);
+
 	*responsePayload = message;
 	*responsePayloadSize = strlen(message);
 	

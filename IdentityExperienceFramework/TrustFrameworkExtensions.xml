@@ -23,6 +23,12 @@
         <UserHelpText>User identity confirmed via Azure Sphere secondary authentication</UserHelpText>
       </ClaimType>
 
+      <ClaimType Id="azsphereDebug">
+        <DisplayName>Debug info</DisplayName>
+        <DataType>string</DataType>
+        <UserHelpText>Debug info from Azure Sphere secondary authentication</UserHelpText>
+      </ClaimType>
+
     </ClaimsSchema>
     <!-- end -->
 
@@ -62,9 +68,13 @@
           </Metadata>
           <InputClaims>
             <InputClaim ClaimTypeReferenceId="givenName" PartnerClaimType="name" />
+            <InputClaim ClaimTypeReferenceId="extension_deviceName" PartnerClaimType="deviceName" />
+            <InputClaim ClaimTypeReferenceId="extension_secondaryMethod" PartnerClaimType="secondaryMethod" />
+            <InputClaim ClaimTypeReferenceId="extension_expectedValue" PartnerClaimType="expectedValue" />
           </InputClaims>
           <OutputClaims>
-            <OutputClaim ClaimTypeReferenceId="confirmed" PartnerClaimType="confirmed" />
+            <OutputClaim ClaimTypeReferenceId="azsphereConfirmed" PartnerClaimType="confirmed" />
+            <OutputClaim ClaimTypeReferenceId="azsphereDebug" PartnerClaimType="debug" />
           </OutputClaims>
           <UseTechnicalProfileForSessionManagement ReferenceId="SM-Noop" />
         </TechnicalProfile>

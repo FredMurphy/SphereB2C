@@ -1,4 +1,4 @@
-﻿namespace SphereB2CFunction
+﻿namespace SphereB2CFunction.Model
 {
     public class ResponseContent
     {
