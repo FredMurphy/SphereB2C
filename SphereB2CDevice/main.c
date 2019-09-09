@@ -8,6 +8,7 @@
 
 #include "mt3620_avnet_dev.h"
 #include "azure_iot_utilities.h"
+#include "Nfc.h"
 
 static volatile int terminationRequired = false;
 
@@ -25,6 +26,9 @@ const struct timespec pollTimespec = { 1, 0 };
 
 char message[50] = "X";
 
+/*
+Incoming direct method call from Azure IoT Hub
+*/
 int directMethodCall(const char* directMethodName, const char* payload, size_t payloadSize, char** responsePayload, size_t* responsePayloadSize) {
 
 	strcpy(message, "{\"error\":true,\"method\":\"none\", \"value\":\"timeout\"}");
@@ -72,7 +76,21 @@ int main(void)
 	}
 	AzureIoT_SetDirectMethodCallback(&directMethodCall);
 
+	if (InitNfc() < 0) {
+		Log_Debug("ERROR: Failed initialize NFC reader\n");
+		return -1;
+	}
+
     const struct timespec sleepTime = {1, 0};
+
+	char tag[20];
+
+	if (GetNfcTagId(tag, 10000) == 0) {
+		Log_Debug("NFC tag: %s\n", tag);
+	}
+	else {
+		Log_Debug("NFC tag timeout\n");
+	}
 
     while (!terminationRequired) {
 

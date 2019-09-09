@@ -25,6 +25,18 @@
     <ClCompile Include="parson.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="NxpNci.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tml.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tool.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Nfc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mt3620_avnet_dev.h">
@@ -37,6 +49,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="secrets.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Nfc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Nfc_settings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NxpNci.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tml.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
