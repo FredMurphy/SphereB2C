@@ -49,7 +49,10 @@ int GetNfcTagId(char* tagBuffer, uint16_t timeout_ms) {
 	Log_Debug("\nWAITING FOR DEVICE DISCOVERY\n");
 
 	/* Wait until a peer is discovered */
-	if (NxpNci_WaitForDiscoveryNotificationTimeout(&RfInterface, timeout_ms) != NFC_SUCCESS) {
+	bool result = NxpNci_WaitForDiscoveryNotificationTimeout(&RfInterface, timeout_ms);
+	NxpNci_StopDiscovery();
+
+	if (result != NFC_SUCCESS) {
 		Log_Debug("No NFC tag found\n");
 		return -1;
 	}

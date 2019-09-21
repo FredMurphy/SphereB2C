@@ -5,6 +5,7 @@
 
 #include <applibs/log.h>
 #include <applibs/gpio.h>
+#include <stdlib.h>
 
 #include "mt3620_avnet_dev.h"
 #include "azure_iot_utilities.h"
@@ -22,43 +23,112 @@ static GPIO_Value_Type buttonAState;
 static GPIO_Value_Type buttonBState;
 
 int configureGpio(void);
-const struct timespec pollTimespec = { 1, 0 };
+const struct timespec buttonPollTimespec = { 0, 100000000 }; // 100ms
 
-char message[50] = "X";
 
 /*
 Incoming direct method call from Azure IoT Hub
+Typical payloads:
+{
+	"deviceName": "MyDeviceName",
+	"secondaryMethod": "nfc"
 */
+char method[20] = { 0 };
+
+
+char* parseSecondaryMethod(const char* payload, size_t payloadSize) {
+
+	size_t nullTerminatedJsonSize = payloadSize + 1;
+	char* nullTerminatedJsonString = (char*)malloc(nullTerminatedJsonSize);
+	if (nullTerminatedJsonString == NULL) {
+		Log_Debug("ERROR: Could not allocate buffer for twin update payload.\n");
+		return method;
+	}
+
+	// Copy the provided buffer to a null terminated buffer.
+	memcpy(nullTerminatedJsonString, payload, payloadSize);
+	// Add the null terminator at the end.
+	nullTerminatedJsonString[nullTerminatedJsonSize - 1] = 0;
+
+	JSON_Value* rootProperties = NULL;
+	rootProperties = json_parse_string(nullTerminatedJsonString);
+	if (rootProperties == NULL) {
+		Log_Debug("WARNING: Cannot parse the string as JSON content.\n");
+		goto cleanup;
+	}
+
+	JSON_Object* rootObject = json_value_get_object(rootProperties);
+	const char* parsedMethod = json_object_get_string(rootObject, "secondaryMethod");
+	strcpy(method, parsedMethod);
+
+cleanup:
+	// Release the allocated memory.
+	json_value_free(rootProperties);
+	free(nullTerminatedJsonString);
+
+	return method;
+}
+
+char message[100] = { 0 };
 int directMethodCall(const char* directMethodName, const char* payload, size_t payloadSize, char** responsePayload, size_t* responsePayloadSize) {
 
-	strcpy(message, "{\"error\":true,\"method\":\"none\", \"value\":\"timeout\"}");
 
 	if (strcmp(directMethodName, "Authenticate")) {
 		return 404;
 	}
 
+	JSON_Value* root_value = json_value_init_object();
+	JSON_Object* root_object = json_value_get_object(root_value);
+
 	GPIO_SetValue(blueLedFd, GPIO_Value_Low);
 
-	for (int i = 5; i > 0; i--) {
-		GPIO_GetValue(buttonAFd, &buttonAState);
-		if (buttonAState == GPIO_Value_Low) {
-			strcpy(message, "{\"method\":\"button\", \"value\":\"button_a\"}");
-			break;
-		}
-		GPIO_GetValue(buttonBFd, &buttonBState);
-		if (buttonBState == GPIO_Value_Low) {
-			//strcpy(message, "{\"method\":\"button\", \"value\":\"button_b\"}");
-			strcpy(message, "{\"method\":\"nfc\", \"value\":\"1234\"}");
-			break;
-		}
+	char* requestedMethod = parseSecondaryMethod(payload, payloadSize);
+	Log_Debug("secondaryMethod: %s\n", requestedMethod);
+	json_object_set_string(root_object, "method", requestedMethod);
+	json_object_set_string(root_object, "value", "not recognised");
 
-		AzureIoT_DoPeriodicTasks();
-		nanosleep(&pollTimespec, NULL);
+	// secondary authentication is NFC tag
+	if (strcmp("nfc", requestedMethod) == 0) {
+		char tag[20];
+		if (GetNfcTagId(tag, 10000) == 0) {
+			Log_Debug("NFC tag: %s\n", tag);
+			json_object_set_string(root_object, "value", tag);
+		}
+		else {
+			Log_Debug("NFC tag timeout\n");
+			json_object_set_string(root_object, "value", "timeout");
+		}
 	}
-	Log_Debug(message);
+	// secondary authentication is button press
+	else if (strcmp("button", requestedMethod) == 0) {
+		json_object_set_string(root_object, "value", "timeout");
+		// Check for button press (every 100ms for 10s)
+		for (int i = 100; i > 0; i--) {
+			GPIO_GetValue(buttonAFd, &buttonAState);
+			if (buttonAState == GPIO_Value_Low) {
+				json_object_set_string(root_object, "value", "button_a");
+				break;
+			}
+			GPIO_GetValue(buttonBFd, &buttonBState);
+			if (buttonBState == GPIO_Value_Low) {
+				json_object_set_string(root_object, "value", "button_b");
+				break;
+			}
+
+			AzureIoT_DoPeriodicTasks();
+			nanosleep(&buttonPollTimespec, NULL);
+		}
+	}
 	
 	GPIO_SetValue(blueLedFd, GPIO_Value_High);
 
+	char* json = json_serialize_to_string(root_value);
+	strcpy(message, json);
+	// release allocated memory
+	json_free_serialized_string(json);
+	json_value_free(root_value);
+
+	Log_Debug(message);
 	*responsePayload = message;
 	*responsePayloadSize = strlen(message);
 	
@@ -82,15 +152,6 @@ int main(void)
 	}
 
     const struct timespec sleepTime = {1, 0};
-
-	char tag[20];
-
-	if (GetNfcTagId(tag, 10000) == 0) {
-		Log_Debug("NFC tag: %s\n", tag);
-	}
-	else {
-		Log_Debug("NFC tag timeout\n");
-	}
 
     while (!terminationRequired) {
 
