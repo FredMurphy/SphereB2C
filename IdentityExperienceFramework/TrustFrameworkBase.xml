@@ -314,13 +314,6 @@
         <UserHelpText>This is your Azure Sphere device name.</UserHelpText>
         <UserInputType>TextBox</UserInputType>
       </ClaimType>
-
-      <ClaimType Id="extension_functionUrl">
-        <DisplayName>URL for device querying function</DisplayName>
-        <DataType>string</DataType>
-        <UserHelpText>This URL is to let other people use their own Azure Sphere device. In reality it would be hidden.</UserHelpText>
-        <UserInputType>TextBox</UserInputType>
-      </ClaimType>
       <!-- end -->
 
     </ClaimsSchema>
@@ -530,7 +523,6 @@
             <PersistedClaim ClaimTypeReferenceId="extension_secondaryMethod" />
             <PersistedClaim ClaimTypeReferenceId="extension_expectedValue" />
             <PersistedClaim ClaimTypeReferenceId="extension_deviceName" />
-            <PersistedClaim ClaimTypeReferenceId="extension_functionUrl" />
 
           </PersistedClaims>
           <OutputClaims>
@@ -570,7 +562,6 @@
             <OutputClaim ClaimTypeReferenceId="extension_secondaryMethod" />
             <OutputClaim ClaimTypeReferenceId="extension_expectedValue" />
             <OutputClaim ClaimTypeReferenceId="extension_deviceName" />
-            <OutputClaim ClaimTypeReferenceId="extension_functionUrl" />
 
           </OutputClaims>
           <OutputClaimsTransformations>
@@ -620,7 +611,6 @@
             <PersistedClaim ClaimTypeReferenceId="extension_secondaryMethod" />
             <PersistedClaim ClaimTypeReferenceId="extension_expectedValue" />
             <PersistedClaim ClaimTypeReferenceId="extension_deviceName" />
-            <PersistedClaim ClaimTypeReferenceId="extension_functionUrl" />
 
           </PersistedClaims>
           <IncludeTechnicalProfile ReferenceId="AAD-Common" />
@@ -649,7 +639,6 @@
             <OutputClaim ClaimTypeReferenceId="extension_secondaryMethod" />
             <OutputClaim ClaimTypeReferenceId="extension_expectedValue" />
             <OutputClaim ClaimTypeReferenceId="extension_deviceName" />
-            <OutputClaim ClaimTypeReferenceId="extension_functionUrl" />
 
           </OutputClaims>
           <IncludeTechnicalProfile ReferenceId="AAD-Common" />
@@ -681,7 +670,6 @@
             <InputClaim ClaimTypeReferenceId="extension_secondaryMethod" />
             <InputClaim ClaimTypeReferenceId="extension_expectedValue" />
             <InputClaim ClaimTypeReferenceId="extension_deviceName" />
-            <InputClaim ClaimTypeReferenceId="extension_functionUrl" />
 
           </InputClaims>
           <OutputClaims>
@@ -697,7 +685,6 @@
             <OutputClaim ClaimTypeReferenceId="extension_secondaryMethod" />
             <OutputClaim ClaimTypeReferenceId="extension_expectedValue" />
             <OutputClaim ClaimTypeReferenceId="extension_deviceName" />
-            <OutputClaim ClaimTypeReferenceId="extension_functionUrl" />
 
           </OutputClaims>
           <ValidationTechnicalProfiles>
@@ -743,7 +730,6 @@
             <OutputClaim ClaimTypeReferenceId="extension_secondaryMethod" />
             <OutputClaim ClaimTypeReferenceId="extension_expectedValue" />
             <OutputClaim ClaimTypeReferenceId="extension_deviceName" />
-            <OutputClaim ClaimTypeReferenceId="extension_functionUrl" />
 
           </OutputClaims>
           <ValidationTechnicalProfiles>

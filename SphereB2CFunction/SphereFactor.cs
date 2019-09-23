@@ -62,6 +62,19 @@ namespace SphereB2CFunction
             if (data == null)
                 return new BadRequestObjectResult("Please pass the required data in the request body");
 
+            // Backdoor for testing - button / button_z will always return "success"
+            if (data.secondaryMethod == "button" && data.expectedValue == "button_z")
+            {
+                return new OkObjectResult(
+                      new ResponseContent
+                      {
+                          version = "1.0.0",
+                          status = (int)HttpStatusCode.OK,
+                          confirmed = true,
+                          debug = "button_z will always always return confirmed"
+                      });
+            }
+
             try
             {
                 var response = await HubService.GetSphereAuthentication(data.deviceName, data.secondaryMethod);

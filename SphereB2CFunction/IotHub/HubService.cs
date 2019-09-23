@@ -17,7 +17,7 @@ namespace SphereB2CFunction.IotHub
 
             var methodInvocation = new CloudToDeviceMethod("Authenticate") { ResponseTimeout = TimeSpan.FromSeconds(30) };
 
-            var payload = new { deviceName, secondaryMethod };
+            var payload = new { secondaryMethod };
             methodInvocation.SetPayloadJson(JsonConvert.SerializeObject(payload));
 
 
