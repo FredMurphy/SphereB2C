@@ -1,17 +1,25 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Devices.Common.Exceptions;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using SphereB2CFunction.IotHub;
 using SphereB2CFunction.Model;
+using System;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 
 namespace SphereB2CFunction
 {
+    /// <summary>
+    /// Calls through to our Azure Sphere device (via Azure IoT Hub) for our custom Multi-Factor Authentication
+    /// </summary>
+    /// <remarks>
+    /// Please note this is kept as simple as possible to illustrate a point. It is not production quality code.
+    /// </remarks>
     public class SphereFactor
     {
         private IHubService HubService { get; }
@@ -24,15 +32,23 @@ namespace SphereB2CFunction
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="req"></param>
-        /// <param name="log"></param>
-        /// {
-        ///     "name": "Fred",
-        ///     "deviceName": "AvnetDevice",
-        ///     "secondaryMethod": "nfc",
-        ///     "expectedValue": "1234"
-        /// }
-        /// <returns></returns>
+        /// <param name="req">
+        ///     The HTTP request
+        /// 
+        ///     We will expect something similar to this in the request body:
+        ///     {
+        ///         "name": "Fred",
+        ///         "deviceName": "AvnetDevice",
+        ///         "secondaryMethod": "nfc",
+        ///         "expectedValue": "1234"
+        ///     }
+        /// </param>
+        /// <param name="log">Logger to be used to writing log info</param>
+        /// <returns>
+        ///     An OkObjectResult with JSON. The following properties are most significant:
+        ///         confirmed:  A boolean represening whether out multi-factor authentication was successful
+        ///         debug:      Some useful debug information
+        /// </returns>
         [FunctionName("Confirm")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
@@ -40,29 +56,60 @@ namespace SphereB2CFunction
         {
             log.LogInformation("SphereFactor.Confirm called");
 
-           
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             PostData data = JsonConvert.DeserializeObject<PostData>(requestBody);
 
             if (data == null)
                 return new BadRequestObjectResult("Please pass the required data in the request body");
 
-            var response = await HubService.GetSphereAuthentication(data.deviceName, data.secondaryMethod, "helloOOOoooOOOoo");
+            try
+            {
+                var response = await HubService.GetSphereAuthentication(data.deviceName, data.secondaryMethod);
 
-            var deviceResponse = JsonConvert.DeserializeObject<DeviceResponse>(response);
+                var deviceResponse = JsonConvert.DeserializeObject<DeviceResponse>(response);
 
-            var confirmed = !deviceResponse.error
-                && data.secondaryMethod.Equals(deviceResponse.method)
-                && data.expectedValue.Equals(deviceResponse.value);
+                var confirmed = !deviceResponse.error
+                    && data.secondaryMethod.Equals(deviceResponse.method)
+                    && data.expectedValue.Equals(deviceResponse.value);
 
-            return (ActionResult)new OkObjectResult(
-                  new ResponseContent
-                  {
-                      version = "1.0.0",
-                      status = (int)HttpStatusCode.OK,
-                      confirmed = confirmed,
-                      debug = response
-                  }) ;
+                return new OkObjectResult(
+                      new ResponseContent
+                      {
+                          version = "1.0.0",
+                          status = (int)HttpStatusCode.OK,
+                          confirmed = confirmed,
+                          debug = response
+                      });
+            }
+            catch (DeviceNotFoundException ex)
+            {
+                // Device is probably not powered up. That's OK. 
+                log.LogError(ex, $"Device {data.deviceName} not found");
+
+                return new OkObjectResult(
+                      new ResponseContent
+                      {
+                          version = "1.0.0",
+                          status = (int)HttpStatusCode.OK,
+                          confirmed = false,
+                          debug = $"Device {data.deviceName} not found"
+                      });
+            }
+            catch (Exception ex)
+            {
+                // General error. Fail quietly.
+                log.LogError(ex, "Exception during SphereFactor.Confirm");
+
+                return new OkObjectResult(
+                      new ResponseContent
+                      {
+                          version = "1.0.0",
+                          status = (int)HttpStatusCode.OK,
+                          confirmed = false,
+                          debug = "Exception: " + ex.Message
+                      });
+
+            }
         }
     }
 }

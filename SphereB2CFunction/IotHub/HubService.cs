@@ -11,7 +11,7 @@ namespace SphereB2CFunction.IotHub
         //TODO: Get from secrets
         private static readonly string ConnectionString = "HostName=0xfred-hub.azure-devices.net;SharedAccessKeyName=service;SharedAccessKey=4eoTO7u5hZpFaXJh6KtaRrg+6195w/ZJi27OSJbbNY8=";
 
-        public async Task<string> GetSphereAuthentication(string deviceName, string secondaryMethod, string message)
+        public async Task<string> GetSphereAuthentication(string deviceName, string secondaryMethod)
         {
             var serviceClient = ServiceClient.CreateFromConnectionString(ConnectionString);
 
