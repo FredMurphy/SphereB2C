@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.AzureADB2C.UI;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,6 +34,12 @@ namespace SphereB2CWeb
             Microsoft.IdentityModel.Logging.IdentityModelEventSource.ShowPII = true;
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddAuthorization(options =>
+            {
+                // This policy requires the user to have successfully gone through our Azure Sphere MFA
+                options.AddPolicy("IsMultiFactorAuthenticated", policy => policy.RequireClaim("azsphereConfirmed", "true"));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
