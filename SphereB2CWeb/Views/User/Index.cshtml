@@ -3,9 +3,12 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Claims for @User.Identity.Name</h1>
+<h1 class="display-4">Claims</h1>
+<p>These are the claims return from Azure AD B2C for <strong>@User.Identity.Name</strong>.</p>
+<p>Azure configuration values are highlighted in yellow and if properly secured would not be passed through to our application.</p>
+<p>Any values returned by our Azure Sphere device are highlighted in green. Once again, the debug claim would not normally be exposed.</p>
 
-<table class="table table-striped table-bordered">
+<table class="table table-bordered table-sm">
     <thead>
         <tr>
             <th scope="col">Claim</th>
@@ -15,7 +18,7 @@
     <tbody>
         @foreach (System.Security.Claims.Claim c in User.Claims)
         {
-            <tr scope="row">
+            <tr scope="row" class="@(c.Type.StartsWith("azsphere") ? "table-success" : (c.Type.StartsWith("extension") ? "table-warning" : ""))">
                 <td>@c.Type</td>
                 <td>@c.Value</td>
             </tr>

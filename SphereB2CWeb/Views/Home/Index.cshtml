@@ -2,7 +2,42 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
+<div>
     <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <p>
+        This site has been created in order to demonstrate using an Azure Sphere device to provide custom Multi-Factor Authentication.
+        In order to do this we have configured Azure AD B2C (using the Identity Experience Framework) to call through to an Azure Function to obtain extra claims information.
+        This Azure function uses Azure IoT Hub to invoke a direct method on the Azure Sphere device.
+    </p>
+    <p>
+        You'll find full details of how this was done on <a href="https://www.hackster.io/fred27murphy/secure-multi-factor-authentication-with-azure-sphere-20c608" target="_blank">hackster.io</a>
+        and the source code on <a href="https://github.com/FredMurphy/SphereB2C" target="_blank">github</a>.
+    </p>
+    <p>Please feel free to try out the Multi-FactorAuthentication on this site using one of the following accounts:</p>
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">Email address</th>
+                <th scope="col">Password</th>
+                <th scope="col">Multi-Factor Authentication configuration</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr scope="row">
+                <td>sphere1@0xfred.com</td>
+                <td>Sphere123</td>
+                <td>This account has no Multi-Factor Authentication setup. It will log straight in but have no access to the Admin page.</td>
+            </tr>
+            <tr scope="row">
+                <td>sphere2@0xfred.com</td>
+                <td>Sphere123</td>
+                <td>This account is setup to use a press of "button_z" for MFA. Our Azure Function is setup to fake that this button has been pressed.</td>
+            </tr>
+            <tr scope="row">
+                <td>sphere3@0xfred.com</td>
+                <td>Sphere123</td>
+                <td>This account is setup to expect an NFC tag with the ID "5469D2AB" for MFA. Unfortunately, as you don't have access to my Azure Sphere device this will most likely timeout.</td>
+            </tr>
+        </tbody>
+    </table>
 </div>
