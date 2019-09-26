@@ -9,6 +9,20 @@
         In order to do this we have configured Azure AD B2C (using the Identity Experience Framework) to call through to an Azure Function to obtain extra claims information.
         This Azure function uses Azure IoT Hub to invoke a direct method on the Azure Sphere device.
     </p>
+    <div>
+        <div class="azure-icon app-service"></div>
+        <div class="azure-icon plus"></div>
+        <div class="azure-icon ad-b2c"></div>
+        <div class="azure-icon plus"></div>
+        <div class="azure-icon function"></div>
+        <div class="azure-icon plus"></div>
+        <div class="azure-icon iot-hub"></div>
+        <div class="azure-icon plus"></div>
+        <div class="azure-icon sphere"></div>
+        <div class="azure-icon equals"></div>
+        <div class="azure-icon security"></div>
+    </div>
+    <div style="clear:both;"></div>
     <p>
         You'll find full details of how this was done on <a href="https://www.hackster.io/fred27murphy/secure-multi-factor-authentication-with-azure-sphere-20c608" target="_blank">hackster.io</a>
         and the source code on <a href="https://github.com/FredMurphy/SphereB2C" target="_blank">github</a>.
@@ -37,6 +51,11 @@
                 <td>sphere3@0xfred.com</td>
                 <td>Sphere123</td>
                 <td>This account is setup to expect an NFC tag with the ID "5469D2AB" for MFA. Unfortunately, as you don't have access to my Azure Sphere device this will most likely timeout.</td>
+            </tr>
+            <tr scope="row">
+                <td>sphere4@0xfred.com</td>
+                <td>Sphere123</td>
+                <td>This account is setupto use a press of "button_a" for MFA. Unfortunately, as you don't have access to my Azure Sphere device this will most likely timeout.</td>
             </tr>
         </tbody>
     </table>
