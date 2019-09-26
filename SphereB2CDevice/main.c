@@ -10,6 +10,7 @@
 #include "mt3620_avnet_dev.h"
 #include "azure_iot_utilities.h"
 #include "Nfc.h"
+#include "display.h"
 
 static volatile int terminationRequired = false;
 
@@ -89,6 +90,7 @@ int directMethodCall(const char* directMethodName, const char* payload, size_t p
 
 	// secondary authentication is NFC tag
 	if (strcmp("nfc", requestedMethod) == 0) {
+		prompt_nfc();
 		char tag[20];
 		if (GetNfcTagId(tag, 10000) == 0) {
 			Log_Debug("NFC tag: %s\n", tag);
@@ -101,6 +103,7 @@ int directMethodCall(const char* directMethodName, const char* payload, size_t p
 	}
 	// secondary authentication is button press
 	else if (strcmp("button", requestedMethod) == 0) {
+		prompt_button();
 		json_object_set_string(root_object, "value", "timeout");
 		// Check for button press (every 100ms for 10s)
 		for (int i = 100; i > 0; i--) {
@@ -121,6 +124,7 @@ int directMethodCall(const char* directMethodName, const char* payload, size_t p
 	}
 	
 	GPIO_SetValue(blueLedFd, GPIO_Value_High);
+	clear_display();
 
 	char* json = json_serialize_to_string(root_value);
 	strcpy(message, json);
@@ -139,6 +143,16 @@ int main(void)
 {
 	if (configureGpio() < 0)
 		return -1;
+
+	if (i2c_Init() < 0) {
+		Log_Debug("Error initializing I2C.\n", strerror(errno), errno);
+		return -1;
+	}
+
+	if (init_display() < 0)
+		return -1;
+
+	clear_display();
 
 	if (!AzureIoT_SetupClient()) {
 		Log_Debug("ERROR: Failed to set up IoT Hub client\n");

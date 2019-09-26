@@ -9,8 +9,8 @@
 #include <time.h>
 #include "tool.h"
 #include "tml.h"
+#include "i2c.h"
 
-static int i2cFd = -1;
 static int resetFd = -1;
 static int irqFd = -1;
 static GPIO_Value_Type irqValue;
@@ -34,31 +34,6 @@ static ssize_t I2C_READ(uint8_t *pBuff, uint16_t buffLen) {
 }
 
 static Status tml_Init(void) {
-
-	i2cFd = I2CMaster_Open(NFC_CLICK_I2C);
-	if (i2cFd < 0) {
-		Log_Debug("ERROR: I2CMaster_Open: errno=%d (%s)\n", errno, strerror(errno));
-		return -1;
-	}
-
-	int result = I2CMaster_SetBusSpeed(i2cFd, I2C_BUS_SPEED_STANDARD);
-	if (result != 0) {
-		Log_Debug("ERROR: I2CMaster_SetBusSpeed: errno=%d (%s)\n", errno, strerror(errno));
-		return -1;
-	}
-
-	result = I2CMaster_SetTimeout(i2cFd, 100);
-	if (result != 0) {
-		Log_Debug("ERROR: I2CMaster_SetTimeout: errno=%d (%s)\n", errno, strerror(errno));
-		return -1;
-	}
-
-	// This default address is used for POSIX read and write calls.  The AppLibs APIs take a target address argument for each read or write.
-	result = I2CMaster_SetDefaultTargetAddress(i2cFd, NFC_ADDRESS);
-	if (result != 0) {
-		Log_Debug("ERROR: I2CMaster_SetDefaultTargetAddress: errno=%d (%s)\n", errno, strerror(errno));
-		return -1;
-	}
 
 	resetFd = GPIO_OpenAsOutput(NFC_RST_PIN, GPIO_OutputMode_PushPull, GPIO_Value_High);
 	if (resetFd < 0) {

@@ -38,19 +38,26 @@
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
     <ClCompile Include="azure_iot_utilities.c" />
+    <ClCompile Include="i2c.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="Nfc.c" />
     <ClCompile Include="NxpNci.c" />
+    <ClCompile Include="display.c" />
     <ClCompile Include="parson.c" />
+    <ClCompile Include="sd1306.c" />
     <ClCompile Include="tml.c" />
     <ClCompile Include="tool.c" />
     <UpToDateCheckInput Include="app_manifest.json" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="azure_iot_utilities.h" />
+    <ClInclude Include="font.h" />
+    <ClInclude Include="i2c.h" />
     <ClInclude Include="Nfc.h" />
     <ClInclude Include="Nfc_settings.h" />
     <ClInclude Include="NxpNci.h" />
+    <ClInclude Include="display.h" />
+    <ClInclude Include="sd1306.h" />
     <ClInclude Include="secrets.h" />
     <ClInclude Include="mt3620_avnet_dev.h" />
     <ClInclude Include="parson.h" />

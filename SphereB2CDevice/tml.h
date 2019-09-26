@@ -18,8 +18,6 @@
 #define TIMEOUT_1S			1000
 #define TIMEOUT_2S			2000
 
-#define NFC_ADDRESS			0x28
-#define NFC_CLICK_I2C		MT3620_I2C_ISU2
 #define NFC_RST_PIN			16
 #define NFC_IRQ_PIN			2
 
