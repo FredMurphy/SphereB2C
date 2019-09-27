@@ -1,9 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using SphereB2CFunction.Model;
+using System.Threading.Tasks;
 
 namespace SphereB2CFunction.IotHub
 {
     public interface IHubService
     {
-        Task<string> GetSphereAuthentication(string deviceName, string secondaryMethod);
+        Task<DeviceResponse> GetSphereAuthentication(string deviceName, string secondaryMethod);
     }
 }

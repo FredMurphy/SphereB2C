@@ -77,9 +77,7 @@ namespace SphereB2CFunction
 
             try
             {
-                var response = await HubService.GetSphereAuthentication(data.deviceName, data.secondaryMethod);
-
-                var deviceResponse = JsonConvert.DeserializeObject<DeviceResponse>(response);
+                var deviceResponse = await HubService.GetSphereAuthentication(data.deviceName, data.secondaryMethod);
 
                 var confirmed = !deviceResponse.error
                     && data.secondaryMethod.Equals(deviceResponse.method)
@@ -91,7 +89,7 @@ namespace SphereB2CFunction
                           version = "1.0.0",
                           status = (int)HttpStatusCode.OK,
                           confirmed = confirmed,
-                          debug = response
+                          debug = JsonConvert.SerializeObject(deviceResponse)
                       });
             }
             catch (DeviceNotFoundException ex)
