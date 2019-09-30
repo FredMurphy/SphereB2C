@@ -6,9 +6,10 @@
   "CmdArgs": [],
   "Capabilities": {
     "AllowedConnections": [ "0xfred-hub.azure-devices.net" ],
-    "Gpio": [ 2, 8, 9, 10, 12, 13, 16 ],
+    "Gpio": [1, 2, 8, 9, 10, 12, 13, 16, 17 ],
     "Uart": [],
-    "I2cMaster": [ "ISU2" ]
+    "I2cMaster": [ "ISU2" ],
+    "SpiMaster": [ "ISU1" ]
   },
   "ApplicationType": "Default"
 }

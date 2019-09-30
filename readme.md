@@ -30,3 +30,5 @@ Our Azure Sphere device is expected to respond to a direct method called Authent
 If it receives a request for a simple button-press confirmation it will wait a mazimum of 10 seconds for a button to be pressed and confirm whether this was _button_a_ or _button_b_.
 
 If it receives a request for a NFC tag then it uses the PN7120-based NFC click board to read the ID of any NFC tag it can find. Once again, 10s is the timeout here to prevent our web application seeming too unresponsive.
+
+An optional Click OLED-B display will give a prompt when you're expected to provide your authentication.

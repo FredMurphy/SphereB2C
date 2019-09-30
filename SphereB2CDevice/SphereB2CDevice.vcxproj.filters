@@ -37,13 +37,19 @@
     <ClCompile Include="Nfc.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sd1306.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="i2c.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="display.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="glcdfont.c">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Avnet_GFX.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="oledb_ssd1306.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -75,16 +81,22 @@
     <ClInclude Include="tool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sd1306.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="i2c.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="font.h">
+    <ClInclude Include="display.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="display.h">
+    <ClInclude Include="display_settings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Avnet_GFX.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="oledb_ssd1306.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="applibs_versions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

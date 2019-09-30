@@ -1,4 +1,5 @@
-#include "sd1306.h"
+#include <stdint.h>
+#include "display_settings.h"
 
 #define OLED_TITLE_X      0
 #define OLED_TITLE_Y      0 

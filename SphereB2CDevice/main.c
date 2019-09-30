@@ -11,6 +11,7 @@
 #include "azure_iot_utilities.h"
 #include "Nfc.h"
 #include "display.h"
+#include "i2c.h"
 
 static volatile int terminationRequired = false;
 
