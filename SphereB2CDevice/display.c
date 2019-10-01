@@ -95,11 +95,9 @@ int oled_reset(void)
 	return 0;
 }
 
-uint8_t init_display() {
+void init_display() {
 
 	oled_display = open_oled(spi_init, oled_reset, spi_write);
-
-//	return sd1306_init();
 }
 
 void clear_display() {
@@ -112,13 +110,13 @@ void prompt(char* title, char* text) {
 
 	oledb_clrDispBuff(oled_display);
 
-	AvnetGFX_setTextColor(1, 1);        // Draw white text
-	AvnetGFX_setCursor(0, 0);             // Start at top-left corner
-	AvnetGFX_setTextSize(2);             // Normal 1:1 pixel scale
+	AvnetGFX_setTextColor(1, 1);
+	AvnetGFX_setCursor(0, 0);
+	AvnetGFX_setTextSize(2);
 	AvnetGFX_printText(title);
 
-	AvnetGFX_setCursor(0, 20);             // Start at top-left corner
-	AvnetGFX_setTextSize(1);             // Normal 1:1 pixel scale
+	AvnetGFX_setCursor(0, 20);
+	AvnetGFX_setTextSize(1);
 	AvnetGFX_printText(text);
 
 	oledb_display(oled_display, DISP_REVERSED);

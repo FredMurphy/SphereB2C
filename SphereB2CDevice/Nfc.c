@@ -4,6 +4,7 @@
 #include <applibs/log.h>
 
 unsigned char mode = NXPNCI_MODE_RW;
+// I'm only using NFC A so removed other types to improve performance
 unsigned char DiscoveryTechnologies[] = {
 	MODE_POLL | TECH_PASSIVE_NFCA
 	//MODE_POLL | TECH_PASSIVE_NFCF,
@@ -11,6 +12,9 @@ unsigned char DiscoveryTechnologies[] = {
 	//MODE_POLL | TECH_PASSIVE_15693 
 };
 
+/*
+Initialize and configure Click NFC
+*/
 int InitNfc() {
 
 	/* Open connection to NXPNCI device */
@@ -35,6 +39,9 @@ int InitNfc() {
 	return 0;
 }
 
+/*
+Try to read the tag ID of any detected NFC tag. Will timeout as specified
+*/
 int GetNfcTagId(char* tagBuffer, uint16_t timeout_ms) {
 
 	NxpNci_RfIntf_t RfInterface;

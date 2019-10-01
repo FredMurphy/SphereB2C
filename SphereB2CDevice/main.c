@@ -27,17 +27,16 @@ static GPIO_Value_Type buttonBState;
 int configureGpio(void);
 const struct timespec buttonPollTimespec = { 0, 100000000 }; // 100ms
 
-
-/*
-Incoming direct method call from Azure IoT Hub
-Typical payloads:
-{
-	"deviceName": "MyDeviceName",
-	"secondaryMethod": "nfc"
-*/
 char method[20] = { 0 };
 
-
+/*
+Parse and respond to parameters in direct method call from Azure IoT Hub
+Typical payload :
+{
+	"deviceName": "MyDeviceName",
+	"secondaryMethod" : "nfc"
+}
+*/
 char* parseSecondaryMethod(const char* payload, size_t payloadSize) {
 
 	size_t nullTerminatedJsonSize = payloadSize + 1;
@@ -71,6 +70,9 @@ cleanup:
 	return method;
 }
 
+/*
+Entry point for direct methid call from IoT Hub
+*/
 char message[100] = { 0 };
 int directMethodCall(const char* directMethodName, const char* payload, size_t payloadSize, char** responsePayload, size_t* responsePayloadSize) {
 
@@ -79,17 +81,18 @@ int directMethodCall(const char* directMethodName, const char* payload, size_t p
 		return 404;
 	}
 
+	GPIO_SetValue(blueLedFd, GPIO_Value_Low);
+
 	JSON_Value* root_value = json_value_init_object();
 	JSON_Object* root_object = json_value_get_object(root_value);
 
-	GPIO_SetValue(blueLedFd, GPIO_Value_Low);
-
 	char* requestedMethod = parseSecondaryMethod(payload, payloadSize);
 	Log_Debug("secondaryMethod: %s\n", requestedMethod);
+
 	json_object_set_string(root_object, "method", requestedMethod);
 	json_object_set_string(root_object, "value", "not recognised");
 
-	// secondary authentication is NFC tag
+	// secondary authentication requires an NFC tag
 	if (strcmp("nfc", requestedMethod) == 0) {
 		prompt_nfc();
 		char tag[20];
@@ -102,7 +105,8 @@ int directMethodCall(const char* directMethodName, const char* payload, size_t p
 			json_object_set_string(root_object, "value", "timeout");
 		}
 	}
-	// secondary authentication is button press
+
+	// secondary authentication requires a button press
 	else if (strcmp("button", requestedMethod) == 0) {
 		prompt_button();
 		json_object_set_string(root_object, "value", "timeout");
@@ -127,8 +131,10 @@ int directMethodCall(const char* directMethodName, const char* payload, size_t p
 	GPIO_SetValue(blueLedFd, GPIO_Value_High);
 	clear_display();
 
+	// Format our response as JSON
 	char* json = json_serialize_to_string(root_value);
 	strcpy(message, json);
+
 	// release allocated memory
 	json_free_serialized_string(json);
 	json_value_free(root_value);
@@ -150,11 +156,10 @@ int main(void)
 		return -1;
 	}
 
-	if (init_display() < 0)
-		return -1;
-
+	init_display();
 	clear_display();
 
+	// Configure out IoT Hub connection
 	if (!AzureIoT_SetupClient()) {
 		Log_Debug("ERROR: Failed to set up IoT Hub client\n");
 		return -1;
@@ -166,20 +171,12 @@ int main(void)
 		return -1;
 	}
 
-    const struct timespec sleepTime = {1, 0};
+	const struct timespec sleepTime = { 1, 0 };
 
-    while (!terminationRequired) {
+	// Wait. Everything else is driven from an incoming direct method call
+	while (!terminationRequired) {
 
-		if (GPIO_GetValue(buttonAFd, &buttonAState) < 0) {
-			Log_Debug("Error reading GPIO: %s (%d).\n", strerror(errno), errno);
-			terminationRequired = true;
-		}
-			
-		if (GPIO_SetValue(redLedFd, buttonAState) < 0) {
-			Log_Debug("Error setting RED LED: %s (%d).\n", strerror(errno), errno);
-			terminationRequired = true;
-		}
-
+		// Blink green LED to show we're running and connected to Azure IoT Hub
         GPIO_SetValue(greenLedFd, GPIO_Value_Low);
         nanosleep(&sleepTime, NULL);
         GPIO_SetValue(greenLedFd, GPIO_Value_High);
@@ -191,10 +188,12 @@ int main(void)
     }
 
 	Log_Debug("Exiting");
-
 }
 
 
+/*
+Configure button inputs and LED outputs
+*/
 int configureGpio() {
 
 	Log_Debug("Configuring GPIO");
@@ -229,7 +228,5 @@ int configureGpio() {
 		return -1;
 	}
 
-
 	return 0;
-
 }

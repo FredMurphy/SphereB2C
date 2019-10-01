@@ -1,5 +1,5 @@
 /*
-* Written to perform the same function as NXP implementation for their devices
+Written to perform the same function as NXP implementation for their devices
 */
 
 #include <stdint.h>
@@ -13,26 +13,12 @@
 
 static int resetFd = -1;
 static int irqFd = -1;
-static GPIO_Value_Type irqValue;
 
 typedef enum {ERROR = 0, SUCCESS = !ERROR} Status;
 
-static ssize_t I2C_WRITE(uint8_t *pBuff, uint16_t buffLen)
-{
-	ssize_t transferredBytes = I2CMaster_Write(i2cFd, NFC_ADDRESS, pBuff, buffLen);
-	if (transferredBytes < 0) {
-		Log_Debug("ERROR: I2CMaster_Write: errno=%d (%s)\n", errno, strerror(errno));
-	}
-
-	return transferredBytes;
-
-}
-
-static ssize_t I2C_READ(uint8_t *pBuff, uint16_t buffLen) {
-	ssize_t transferredBytes = I2CMaster_Read(i2cFd, NFC_ADDRESS, pBuff, buffLen);
-	return transferredBytes;
-}
-
+/*
+Initialize Click NFC
+*/
 static Status tml_Init(void) {
 
 	resetFd = GPIO_OpenAsOutput(NFC_RST_PIN, GPIO_OutputMode_PushPull, GPIO_Value_High);
@@ -55,7 +41,9 @@ static Status tml_DeInit(void) {
     return SUCCESS;
 }
 
-
+/*
+Reset Click NFC device
+*/
 static Status tml_Reset(void) {
 
 	GPIO_SetValue(resetFd, GPIO_Value_Low);
@@ -65,6 +53,9 @@ static Status tml_Reset(void) {
 	return SUCCESS;
 }
 
+/*
+Read I2C data from Click NFC (with timeout)
+*/
 static Status tml_WaitForRx(uint32_t timeout) {
 
 	GPIO_Value_Type irq = GPIO_Value_Low;
@@ -78,15 +69,24 @@ static Status tml_WaitForRx(uint32_t timeout) {
 	return (irq == GPIO_Value_Low ? ERROR : SUCCESS);
 }
 
+/*
+Connect to and reset Click NFC device
+*/
 void tml_Connect(void) {
 	tml_Init();
 	tml_Reset();
 }
 
+/*
+Disconnect Click NFC
+*/
 void tml_Disconnect(void) {
 	tml_DeInit();
 }
 
+/*
+Send I2C data to Click NFC
+*/
 void tml_Send(uint8_t *pBuffer, uint16_t BufferLen, uint16_t *pBytesSent) {
 
 	uint8_t retries = 10;
@@ -104,6 +104,9 @@ void tml_Send(uint8_t *pBuffer, uint16_t BufferLen, uint16_t *pBytesSent) {
 	*pBytesSent = transferredBytes;
 }
 
+/*
+Receive I2C data from Click NFC
+*/
 void tml_Receive(uint8_t *pBuffer, uint16_t BufferLen, uint16_t *pBytes, uint16_t timeout) {
 
 	if (tml_WaitForRx(timeout) == ERROR)
@@ -131,15 +134,3 @@ void tml_Receive(uint8_t *pBuffer, uint16_t BufferLen, uint16_t *pBytes, uint16_
 		*pBytes = bytesRead;
 	}
 }
-
-void tml_SendThenReceive(uint8_t* pTxBuffer, uint16_t TxBufferLen, uint8_t* pRxBuffer, uint16_t RxBufferLen, uint16_t* pBytesReceived, uint16_t timeout) {
-
-	ssize_t bytesReceived = I2CMaster_WriteThenRead(i2cFd, NFC_ADDRESS, pTxBuffer, TxBufferLen, pRxBuffer, RxBufferLen);
-	if (bytesReceived < 0) {
-		Log_Debug("ERROR: I2CMaster_WriteThenRead: errno=%d (%s)\n", errno, strerror(errno));
-		bytesReceived = 0;
-	}
-
-	*pBytesReceived = bytesReceived;
-}
-

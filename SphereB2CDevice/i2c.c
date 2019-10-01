@@ -4,6 +4,9 @@
 #include <string.h>
 #include "i2c.h"
 
+/*
+Configure I2C, which will be used for NFC
+*/
 int i2c_Init() {
 
 	i2cFd = -1;
