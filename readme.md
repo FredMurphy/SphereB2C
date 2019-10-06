@@ -1,8 +1,9 @@
 # Sphere B2C
+[![Build Status](https://dev.azure.com/fred27murphy/SphereB2C/_apis/build/status/FredMurphy.SphereB2C?branchName=master)]
 This is a multi-project solution to demonstrate the use of a Microsoft Azure Sphere device to provide custom Multi-Factor Authentication in Azure AD B2C.
 
-Please note that this is written as demonstration code. It is designed to illustrate the concepts as simply as possible. For this reason, it is not production quality code. 
-[![Build Status](https://dev.azure.com/fred27murphy/SphereB2C/_apis/build/status/FredMurphy.SphereB2C?branchName=master)](https://dev.azure.com/fred27murphy/SphereB2C/_build/latest?definitionId=2&branchName=master)
+Please note that this is written as demonstration code. It is designed to illustrate the concepts as simply as possible. For this reason, it is not production quality code.
+
 ## Project Components
 
 ### SphereB2CWeb
